@@ -3,16 +3,20 @@ using System.Collections;
 
 public class LevelSetup : MonoBehaviour {
 	
-	public GameObject cameraIn;
-	public GameObject playerIn;
-	public Canvas HUDIn;
+	public GameObject cameraPrefab;
+	public GameObject shipPrefab;
+	public Canvas HUDPrefab;
 	private SpawnManager spawnPoint;
+
+	private gameControllerScript gameController;
 
 	void Start() {
 		spawnPoint = GetComponent<SpawnManager>();
+		gameController = GetComponent<gameControllerScript>();
 		//initialiseLevel(PlayerPrefs.GetInt("playerNumber"));
-		initialiseLevel(2);
+		initialiseLevel(3);
 	}
+
 	// Function that divides up the screen for each players piece :: input paramater is the number of players
 	void initialiseLevel(int number){
 		
@@ -58,68 +62,38 @@ public class LevelSetup : MonoBehaviour {
 		}
 
 		//Below is for calculating the size and position of each camera based on the rows and columns and then creating them
-		int col = 0;
-		int rw = 1;
+		int column = 0;
+		int row = 1;
 
 		for(int i=0; i < number; i++){
 			GameObject newPlayer = createPlayer(i);
-			GameObject newCamera = createCamera(columns, rows, col, rw);
-			Canvas newHUD = createHUD(i);
-			newHUD.worldCamera = newCamera.GetComponent<Camera>();
-			newCamera.transform.position = newPlayer.transform.position + new Vector3(0,0,-1f);
+			gameController.players.Add(newPlayer);
+			GameObject newCamera = createCamera(columns, rows, column, row, newPlayer);
+			GameObject newHUD = createHUD(newPlayer.GetComponent<ShipAttributes>());
+			newHUD.GetComponent<Canvas>().worldCamera = newCamera.GetComponent<Camera>();
+			//newCamera.transform.position = newPlayer.transform.position + new Vector3(0,0,-1f);
 			//newCamera.transform.parent = newPlayer.transform;
-			newCamera.GetComponent<CameraScript>().ship = newPlayer.transform;
-			newCamera.GetComponent<CameraScript>().enabled = true;	
-			col++;
-			if(col == columns){col = 0; rw++;}
+			// newCamera.GetComponent<CameraScript>().ship = newPlayer.transform;
+			// newCamera.GetComponent<CameraScript>().enabled = true;	
+			column++;
+			if(column == columns){column = 0; row++;}
 		}
 
 	}
 
-	Canvas createHUD(int i){
-		Canvas HUD;
-		HUD = Instantiate(HUDIn) as Canvas;
-		HUD.GetComponent<HUDManager>().playerNumber = i;
-		return HUD;
+	GameObject createHUD(ShipAttributes shipAttributes){
+		GameObject createdHUD =  new HUDFactory(shipAttributes).create(HUDPrefab.gameObject);
+		return createdHUD;
 	}
 
-	GameObject createCamera(int columns, int rows, int col, int rw){
-		GameObject createdCamera = Instantiate(cameraIn) as GameObject;
-		createdCamera.GetComponent<Camera>().rect = new Rect((1f/columns)*col, 1-((1f/rows)*rw), 1f/columns, 1f/rows);
-		createdCamera.tag = "Camera";
+	GameObject createCamera(int totalColumns, int totalRows, int col, int rw, GameObject newPlayer){
+		GameObject createdCamera =  new CameraFactory(totalColumns, totalRows, col, rw, newPlayer).create(cameraPrefab);
 		return createdCamera;
 	}
 
 	GameObject createPlayer(int i){
-		GameObject clone;
-		//Debug.Log (i);
-		clone = Instantiate(playerIn, spawnPoint.spawnPoints[i].transform.position , transform.rotation) as GameObject; 
-		shipAttributes attributes = clone.GetComponent<shipAttributes>();
-		attributes.playerNumber = i;
-		return clone;
+		GameObject player =  new ShipFactory(i).create(shipPrefab, spawnPoint.spawnPoints[i].transform.position, transform.rotation);
+		return player;
 	}
 
 }
-
-
-/* GLOSSARY
- * 
-		int rows;
-		if(number == 1){rows = 1;}
-		else if(number % 3 == 0){rows = number/3;}
-		else if((number-1) % 3 == 0){rows = (number-1)/3+1;}
-		else{rows = (number/3)+1;}
-		
-		int columns;
-		if(number%3 == 0){columns = 3;}
-		else{columns = (number%3);}
-		
-		Debug.Log(rows + " , " + columns);
-		
-		for(int i=0; i < number; i++){
-			GameObject createdCamera = Instantiate(cameraIn) as GameObject;
-			Debug.Log(i+1);
-			createdCamera.GetComponent<Camera>().rect = new Rect( ((1f/columns)*(i+1f))-(1f/columns), 0, 1f/columns, 1f/rows);
-		}
- *
- */

@@ -23,7 +23,7 @@ public class ShipMovement : MonoBehaviour {
 	}
 
 	void Start(){
-		 playerNum = GetComponent<shipAttributes>().playerNumber;
+		 playerNum = GetComponent<ShipAttributes>().playerNumber;
 		 //Debug.Log ("playerNum: " + playerNum);
 		 exhaustEffect.enableEmission = true;
 	}

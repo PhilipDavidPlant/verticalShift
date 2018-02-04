@@ -12,25 +12,14 @@ public class WeaponManager : MonoBehaviour {
 	List<IFireable> currentWeaponArray = new List<IFireable>();
 	int current;
 
-	void OnEnable() {
-		GetComponentInParent<DeathScript>().onDeath += setDeath;
-		GetComponentInParent<DeathScript>().onRespawn += setRespawn;
-		isAlive = true;
-	}
-
-	void OnDisable() {
-		GetComponentInParent<DeathScript>().onDeath -= setDeath;
-		GetComponentInParent<DeathScript>().onRespawn -= setRespawn;
-	}
-
 	void Start () {
 		rapidWeapon = GetComponent<RapidFireWeapon>();
 		stdWeapon = GetComponent<StandardWeapon>();
 		currentWeaponArray.Add(stdWeapon);
 		currentWeaponArray.Add(rapidWeapon);
 
-		if (GetComponentInParent<shipAttributes> () != null) {
-			playerNum = GetComponentInParent<shipAttributes>().playerNumber;
+		if (GetComponentInParent<ShipAttributes> () != null) {
+			playerNum = GetComponentInParent<ShipAttributes>().playerNumber;
 		} else {
 			//playerNum = 0;
 		}
@@ -45,6 +34,7 @@ public class WeaponManager : MonoBehaviour {
 			}
 		}
 		if(Input.GetButtonUp("Fire" + playerNum)){
+			Debug.Log("fired");
 			currentWeaponArray[current].fireUp();
 		}
 		if (Input.GetKeyDown("w")) {

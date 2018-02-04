@@ -10,8 +10,8 @@ public class ShipShoot : MonoBehaviour {
 	private int playerNum;
 
 	void Start(){
-		if (GetComponent<shipAttributes> () != null) {
-			playerNum = GetComponent<shipAttributes> ().playerNumber;
+		if (GetComponent<ShipAttributes> () != null) {
+			playerNum = GetComponent<ShipAttributes> ().playerNumber;
 		} else {
 			playerNum = 0;
 		}

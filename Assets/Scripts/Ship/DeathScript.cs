@@ -7,9 +7,9 @@ public class DeathScript : MonoBehaviour {
 	private Rigidbody2D theRigidbody2D;
 	private SpriteRenderer theSprite;
 	private PolygonCollider2D theCollider;
-	private AudioSource audio;
+	public AudioSource audio;
 	private SpawnManager spawnPoint;
-	private shipAttributes shipAttributes;
+	private ShipAttributes shipAttributes;
 
 	public delegate void deathAction(); // Prototype function for the events fired by this script (toggle death and dieEvent)
 	public event deathAction onDeath; // This event is used by the ship movement and weapon manager scripts to block controller input when a player dies.
@@ -22,7 +22,7 @@ public class DeathScript : MonoBehaviour {
 		theRigidbody2D = GetComponent<Rigidbody2D>();
 		theSprite = GetComponent<SpriteRenderer>();
 		theCollider = GetComponent<PolygonCollider2D>();
-		shipAttributes = GetComponentInParent<shipAttributes>();
+		shipAttributes = GetComponentInParent<ShipAttributes>();
 		spawnPoint = GameObject.FindWithTag("GameController").GetComponent<SpawnManager>();
 
 	}
@@ -45,13 +45,12 @@ public class DeathScript : MonoBehaviour {
 		StartCoroutine("countDownSpawn");
 
 
-		//GameObject.Find("GameMaster").GetComponent<gameControllerScript>().playerScore -= 1;
+		shipAttributes.lives -= 1;
 	}
 
 	IEnumerator countDownSpawn(){
 		int countDown = 8;
 		while (countDown > 0) {
-			Debug.Log(countDown);
 			yield return new WaitForSeconds(1);
 			countDown--;
 		}

@@ -24,7 +24,7 @@ public class metalScript : MonoBehaviour {
 		//Debug.Log("Tigger Fired!");
 		if(isAlive){
 			if(youHitMe.tag == "Player"){
-				youHitMe.GetComponent<shipAttributes>().scrapMetal += 1;
+				youHitMe.GetComponent<ShipAttributes>().scrapMetal += 1;
 				isAlive = false;
 				theSprite.enabled = false;
 				metalPickupSound.Play();

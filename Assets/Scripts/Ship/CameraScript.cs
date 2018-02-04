@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraScript : MonoBehaviour {
 
-	public Transform ship;
+	public GameObject ship;
 	public float offset;
 	private float shakeAmount;
 	private float shakeFalloff;
@@ -25,7 +25,7 @@ public class CameraScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		transform.position = (ship.position - new Vector3(0, 0, offset)) + (Random.insideUnitSphere * shakeAmount);
+		transform.position = (ship.transform.position - new Vector3(0, 0, offset)) + (Random.insideUnitSphere * shakeAmount);
 		if(shakeAmount != 0){
 			shakeAmount -= shakeFalloff;
 		}
